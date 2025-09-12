@@ -3,16 +3,25 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Color Changer</title>
-  <link rel="stylesheet" href="popup.css">
+  <title>My-Tabs</title>
+  <link rel="stylesheet" href="mytabs.css">
 </head>
 
 <body>
   <div class="mytabContainer">
     <h2>Add your favourites tabs</h2>
-    <div class="tablists"></div>
+    <div class="newTabsDetails">
+      <input placeholder="Enter tabs Name.." type="text" class="input">
+      <input placeholder="Enter tabs URL.." type="text" class="input">
+      <input placeholder="Enter tabs Image link.." type="text" class="input">
+    </div>
+    <button id="addNewTab">
+      <div class="icon">➕</div>
+      <span>Add Tab</span>
+    </button>
+    <div id="tablists"></div>
   </div>
-  <script src="popup.js"></script>
+  <script type="module" src="mytabs.js"></script>
 </body>
 
 </html>

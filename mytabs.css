@@ -8,10 +8,86 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: sans-serif, "poppins";
 }
-
 .mytabContainer {
   width: 40%;
-  height: 50%;
-  border: 1px dotted green;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.newTabsDetails {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.input {
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+h2 {
+  background-color: wheat;
+  padding: 10px 15px;
+  text-align: center;
+  width: fit-content;
+  margin: auto;
+  border-radius: 5px;
+}
+#addNewTab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-end;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#addNewTab span {
+  font-size: 20px;
+  font-weight: 700;
+  color: red;
+  padding: 4px 8px;
+}
+
+#tablists {
+  border: 2px dotted green;
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tabDetails {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: transparent;
+  background-color: gray;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+.tabImg {
+  width: 40px;
+  height: 40px;
+}
+.tabImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tabName {
+  color: white;
+}
+
+#tablists::-webkit-scrollbar {
+  display: none;
 }
