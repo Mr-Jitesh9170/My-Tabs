@@ -1,5 +1,3 @@
-import { mytabs } from "./data.js";
-
 const tablists = document.getElementById("tablists");
 const addBtn = document.getElementById("addNewTab");
 
@@ -16,7 +14,7 @@ function createTab(tab) {
   const tabImg = document.createElement("div");
   tabImg.className = "tabImg";
   const imgTag = document.createElement("img");
-  imgTag.src = tab?.icons
+  imgTag.src = tab?.icons || "default-icon.png";
   tabImg.appendChild(imgTag);
 
   tabDetails.appendChild(tabImg);
@@ -25,26 +23,17 @@ function createTab(tab) {
   tablists.appendChild(tabDetails);
 }
 
-
-
 function openDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("MyTabs", 1);
-
     request.onupgradeneeded = function (event) {
       const db = event.target.result;
       if (!db.objectStoreNames.contains("tabs")) {
         db.createObjectStore("tabs", { keyPath: "id", autoIncrement: true });
       }
     };
-
-    request.onsuccess = function (event) {
-      resolve(event.target.result);
-    };
-
-    request.onerror = function (event) {
-      reject("DB error: " + event.target.errorCode);
-    };
+    request.onsuccess = (event) => resolve(event.target.result);
+    request.onerror = (event) => reject("DB error: " + event.target.errorCode);
   });
 }
 
@@ -52,10 +41,9 @@ async function saveTabs(tabs) {
   const db = await openDB();
   const tx = db.transaction("tabs", "readwrite");
   const store = tx.objectStore("tabs");
-  tabs.forEach(tab => {
+  tabs.forEach((tab) => {
     store.add(tab);
   });
-  return tx.complete;
 }
 
 async function getTabs() {
@@ -70,14 +58,28 @@ async function getTabs() {
   });
 }
 
-addBtn.addEventListener("click", async () => {
-  let addedTabs = []
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    tabs.map((tabData) => {
-      addedTabs.push({ name: tabData.title, icons: tabData.favIconUrl, links: tabData.url })
-    })
+function getActiveTab() {
+  return new Promise((resolve) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const formatted = tabs.map((tabData) => ({
+        name: tabData.title,
+        icons: tabData.favIconUrl,
+        links: tabData.url,
+      }));
+      resolve(formatted);
+    });
   });
-  console.log(addedTabs, "<---- addedd tabs")
-  let res = await saveTabs(addedTabs)
-  console.log(res)
-})
+}
+
+addBtn.addEventListener("click", async () => {
+  const addedTabs = await getActiveTab();
+  await saveTabs(addedTabs);
+  await displayTabs()
+});
+
+const displayTabs = async () => {
+  const res = await getTabs();
+  tablists.innerHTML = "";
+  res.forEach((tab) => createTab(tab));
+}
+displayTabs()
