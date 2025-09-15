@@ -1,3 +1,5 @@
+import { openDB, clearIndexedDB, saveTabs } from "./dbs/db.js";
+
 const tablists = document.getElementById("tablists");
 const addBtn = document.getElementById("addNewTab");
 const removeAllTabs = document.getElementById("removeAllbtn")
@@ -23,46 +25,7 @@ function createTab(tab) {
   tabDetails.appendChild(tabName);
 
   tablists.appendChild(tabDetails);
-}
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open("MyTabs", 1);
-    request.onupgradeneeded = function (event) {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains("tabs")) {
-        db.createObjectStore("tabs", { keyPath: "id", autoIncrement: true });
-      }
-    };
-    request.onsuccess = (event) => resolve(event.target.result);
-    request.onerror = (event) => reject("DB error: " + event.target.errorCode);
-  });
-}
-
-async function saveTabs(tabs) {
-  const db = await openDB();
-  const tx = db.transaction("tabs", "readwrite");
-  const store = tx.objectStore("tabs");
-  tabs.forEach((tab) => {
-    store.add(tab);
-  });
-}
-function clearIndexedDB(dbName) {
-  const request = indexedDB.deleteDatabase(dbName);
-
-  request.onsuccess = function () {
-    console.log(`Database '${dbName}' deleted successfully`);
-  };
-
-  request.onerror = function () {
-    console.error(`Error deleting database '${dbName}'`);
-  };
-
-  request.onblocked = function () {
-    console.warn(`Database '${dbName}' deletion blocked`);
-  };
-}
-
+} 
 async function getTabs() {
   const db = await openDB();
   const tx = db.transaction("tabs", "readonly");
@@ -73,8 +36,7 @@ async function getTabs() {
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject("Error reading data");
   });
-}
-
+} 
 function getActiveTab() {
   return new Promise((resolve) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -86,23 +48,19 @@ function getActiveTab() {
       resolve(formatted);
     });
   });
-}
-
+} 
 addBtn.addEventListener("click", async () => {
   const addedTabs = await getActiveTab();
   await saveTabs(addedTabs);
   await displayTabs()
-});
-
-// display tabs =>
+}); 
 const displayTabs = async () => {
   const res = await getTabs();
   tablists.innerHTML = "";
   res.forEach((tab) => createTab(tab));
 }
-displayTabs()
-
+displayTabs() 
 removeAllTabs.addEventListener('click', async () => {
   tablists.innerHTML = "";
-  clearIndexedDB('MyTabs') 
+  clearIndexedDB('MyTabs')
 })
