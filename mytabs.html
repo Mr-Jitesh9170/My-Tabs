@@ -9,17 +9,18 @@
 
 <body>
   <div class="mytabContainer">
-    <h2>Add your favourites tabs</h2>
-    <div class="newTabsDetails">
-      <input placeholder="Enter tabs Name.." type="text" class="input">
-      <input placeholder="Enter tabs URL.." type="text" class="input">
-      <input placeholder="Enter tabs Image link.." type="text" class="input">
+    <div class="topRow">
+      <h2>Your Favourite Tabs</h2>
+      <button id="addNewTab" title="Add Current Tab">
+        <span>➕</span>
+      </button>
     </div>
-    <button id="addNewTab">
-      <div class="icon">➕</div>
-      <span>Add Tab</span>
-    </button>
-    <div id="tablists"></div>
+    <div id="tablists">
+    </div>
+    <div class="footer">
+      <button class="textBtn" title="Remove all tabs">Clear All</button>
+      <a href="https://github.com/Mr-Jitesh9170" target="_blank" class="textBtn" title="Remove all tabs">Follow</a>
+    </div>
   </div>
   <script type="module" src="mytabs.js"></script>
 </body>

@@ -1,93 +1,142 @@
-body {
-  height: 100vh;
-  width: 100vw;
-  background-color: black;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: sans-serif, "poppins";
+:root {
+  --bg: #0b0b0c;
+  --panel: #101213;
+  --muted: #9aa0a6;
+  --accent: #1db954;
+  --danger: #ff5c5c;
+  --card: #181a1c;
+  --glass: rgba(255, 255, 255, 0.05);
+  --radius: 10px;
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
+  --maxWidth: 380px;
 }
+
+body {
+  font-family: Inter, "Poppins", system-ui;
+  background: linear-gradient(180deg, var(--bg), #0a0a0a);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
 .mytabContainer {
-  width: 40%;
-  height: 60%;
+  width: 100%;
+  max-width: var(--maxWidth);
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  min-width: 280px;
 }
 
-.newTabsDetails {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.input {
-  padding: 8px 12px;
-  border-radius: 5px;
-}
-
-h2 {
-  background-color: wheat;
-  padding: 10px 15px;
-  text-align: center;
-  width: fit-content;
-  margin: auto;
-  border-radius: 5px;
-}
-#addNewTab {
+.topRow {
   display: flex;
   align-items: center;
-  gap: 5px;
-  align-self: flex-end;
-  border-radius: 5px;
-  cursor: pointer;
+  justify-content: space-between;
 }
-#addNewTab span {
-  font-size: 20px;
-  font-weight: 700;
-  color: red;
-  padding: 4px 8px;
+h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+#addNewTab {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(180deg, #161819, #1d1f21);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 18px;
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+#addNewTab:hover {
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.35);
+}
+#addNewTab:active {
+  transform: scale(0.92);
 }
 
 #tablists {
-  border: 2px dotted green;
-  border-radius: 5px;
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  overflow-y: auto;
+  background: var(--glass);
+  border-radius: var(--radius);
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 8px;
+  max-height: 340px;
+  overflow-y: auto;
 }
-
 .tabDetails {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background-color: transparent;
-  background-color: gray;
-  padding: 8px 12px;
-  border-radius: 5px;
-  text-decoration: none;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--card);
+  transition: all 0.15s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+.tabDetails:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
 }
 .tabImg {
-  width: 40px;
-  height: 40px;
+  flex: 2;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.07);
+  display: grid;
+  place-items: center;
 }
 .tabImg img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
-.tabName {
-  color: white;
+.tabDetails .tabName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex: 8;
+  overflow: hidden;
+}
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+.textBtn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.12s ease;
+}
+.textBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
 }
 
 #tablists::-webkit-scrollbar {
-  display: none;
+  width: 8px;
+}
+#tablists::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
 }

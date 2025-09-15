@@ -4,14 +4,9 @@
   "description": "A simple Chrome extension that store your favourite extensions",
   "version": "1.0",
   "action": {
-    "default_popup": "mytabs.html",
-    "default_icon": {
-      "16": "assets/icon16.png",
-      "48": "assets/icon48.png",
-      "128": "assets/icon128.png"
-    }
+    "default_popup": "mytabs.html"
   },
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab","tabs"], 
   "background": {
     "service_worker": "background.js"
   }

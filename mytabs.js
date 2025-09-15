@@ -3,22 +3,20 @@ import { mytabs } from "./data.js";
 const tablists = document.getElementById("tablists");
 const addBtn = document.getElementById("addNewTab");
 
-// ✅ reusable function to render a tab
 function createTab(tab) {
   const tabDetails = document.createElement("a");
   tabDetails.className = "tabDetails";
-  tabDetails.href = tab.links || "https://github.com/Mr-Jitesh9170/My-Tabs";
+  tabDetails.href = tab?.links;
+  tabDetails.target = "_blank";
 
   const tabName = document.createElement("div");
   tabName.className = "tabName";
-  tabName.innerText = tab.name;
+  tabName.innerText = tab?.name;
 
   const tabImg = document.createElement("div");
   tabImg.className = "tabImg";
   const imgTag = document.createElement("img");
-  imgTag.src =
-    tab.icons ||
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwJTFfoVZ4-V-Zt8oj5O3AnpHaYlrOEpVgRg&s";
+  imgTag.src = tab?.icons
   tabImg.appendChild(imgTag);
 
   tabDetails.appendChild(tabImg);
@@ -27,26 +25,59 @@ function createTab(tab) {
   tablists.appendChild(tabDetails);
 }
 
-// render initial tabs
-mytabs.forEach((tab) => {
-  createTab(tab);
-});
 
-// add new tab on button click
-addBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  console.log("cdfdj");
 
-  let inputFields = document.getElementsByClassName("input");
-  Array.from(inputFields).forEach((data) => {
-    const newTab = {
-      name: data.value,
-      icons:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwJTFfoVZ4-V-Zt8oj5O3AnpHaYlrOEpVgRg&s",
-      links: "https://github.com/Mr-Jitesh9170/My-Tabs",
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("MyTabs", 1);
+
+    request.onupgradeneeded = function (event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains("tabs")) {
+        db.createObjectStore("tabs", { keyPath: "id", autoIncrement: true });
+      }
     };
-    mytabs.push(newTab);
-    createTab(newTab); // ✅ now this works
-    data.value = "";
+
+    request.onsuccess = function (event) {
+      resolve(event.target.result);
+    };
+
+    request.onerror = function (event) {
+      reject("DB error: " + event.target.errorCode);
+    };
   });
-});
+}
+
+async function saveTabs(tabs) {
+  const db = await openDB();
+  const tx = db.transaction("tabs", "readwrite");
+  const store = tx.objectStore("tabs");
+  tabs.forEach(tab => {
+    store.add(tab);
+  });
+  return tx.complete;
+}
+
+async function getTabs() {
+  const db = await openDB();
+  const tx = db.transaction("tabs", "readonly");
+  const store = tx.objectStore("tabs");
+
+  return new Promise((resolve, reject) => {
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject("Error reading data");
+  });
+}
+
+addBtn.addEventListener("click", async () => {
+  let addedTabs = []
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    tabs.map((tabData) => {
+      addedTabs.push({ name: tabData.title, icons: tabData.favIconUrl, links: tabData.url })
+    })
+  });
+  console.log(addedTabs, "<---- addedd tabs")
+  let res = await saveTabs(addedTabs)
+  console.log(res)
+})
