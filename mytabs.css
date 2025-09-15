@@ -46,17 +46,17 @@ h2 {
   color: #fff;
   letter-spacing: 0.3px;
 }
-#addNewTab {
-  width: 34px;
-  height: 34px;
+#addNewTab { 
   border-radius: 10px;
   border: none;
   background: linear-gradient(180deg, #161819, #1d1f21);
   display: grid;
   place-items: center;
+  text-wrap: nowrap;
   cursor: pointer;
   color: var(--accent);
   font-size: 18px;
+  padding: 3px 5px;
   transition: transform 0.1s ease, box-shadow 0.15s ease;
 }
 #addNewTab:hover {

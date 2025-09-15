@@ -1,5 +1,7 @@
 const tablists = document.getElementById("tablists");
 const addBtn = document.getElementById("addNewTab");
+const removeAllTabs = document.getElementById("removeAllbtn")
+
 
 function createTab(tab) {
   const tabDetails = document.createElement("a");
@@ -14,7 +16,7 @@ function createTab(tab) {
   const tabImg = document.createElement("div");
   tabImg.className = "tabImg";
   const imgTag = document.createElement("img");
-  imgTag.src = tab?.icons || "default-icon.png";
+  imgTag.src = tab?.icons || "./assets/tabs.png";
   tabImg.appendChild(imgTag);
 
   tabDetails.appendChild(tabImg);
@@ -44,6 +46,21 @@ async function saveTabs(tabs) {
   tabs.forEach((tab) => {
     store.add(tab);
   });
+}
+function clearIndexedDB(dbName) {
+  const request = indexedDB.deleteDatabase(dbName);
+
+  request.onsuccess = function () {
+    console.log(`Database '${dbName}' deleted successfully`);
+  };
+
+  request.onerror = function () {
+    console.error(`Error deleting database '${dbName}'`);
+  };
+
+  request.onblocked = function () {
+    console.warn(`Database '${dbName}' deletion blocked`);
+  };
 }
 
 async function getTabs() {
@@ -77,9 +94,15 @@ addBtn.addEventListener("click", async () => {
   await displayTabs()
 });
 
+// display tabs =>
 const displayTabs = async () => {
   const res = await getTabs();
   tablists.innerHTML = "";
   res.forEach((tab) => createTab(tab));
 }
 displayTabs()
+
+removeAllTabs.addEventListener('click', async () => {
+  tablists.innerHTML = "";
+  clearIndexedDB('MyTabs') 
+})
