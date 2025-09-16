@@ -38,6 +38,23 @@ function clearIndexedDB(dbName) {
     };
 }
 
+const deleteOneIndexDB = (id) => {
+    let request = indexedDB.open(`MyTabs`, 1);
+    request.onsuccess = function (event) {
+        let db = event.target.result;
+        let transaction = db.transaction(["tabs"], "readwrite");
+        let store = transaction.objectStore("tabs");
+        let deleteRequest = store.delete(id);
+        deleteRequest.onsuccess = function () {
+            console.log("Deleted successfully!");
+        };
+        deleteRequest.onerror = function (event) {
+            console.error(event.target.error);
+        };
+    };
+}
+
+
 export {
-    openDB, clearIndexedDB, saveTabs
+    openDB, clearIndexedDB, saveTabs, deleteOneIndexDB
 }

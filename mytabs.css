@@ -46,7 +46,7 @@ h2 {
   color: #fff;
   letter-spacing: 0.3px;
 }
-#addNewTab { 
+#addNewTab {
   border-radius: 10px;
   border: none;
   background: linear-gradient(180deg, #161819, #1d1f21);
@@ -76,7 +76,32 @@ h2 {
   max-height: 340px;
   overflow-y: auto;
 }
+.deleteBtn {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  top: -10px;
+  right: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 1.5px;
+}  
+.textBtn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.12s ease;
+}
+.textBtn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
 .tabDetails {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -117,20 +142,6 @@ h2 {
   display: flex;
   justify-content: space-between;
   padding-top: 4px;
-}
-.textBtn {
-  background: transparent;
-  border: none;
-  color: var(--muted);
-  font-size: 13px;
-  cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: all 0.12s ease;
-}
-.textBtn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
 }
 
 #tablists::-webkit-scrollbar {

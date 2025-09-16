@@ -1,8 +1,9 @@
-import { openDB, clearIndexedDB, saveTabs } from "./dbs/db.js";
+import { openDB, clearIndexedDB, saveTabs, deleteOneIndexDB } from "./dbs/db.js";
 
 const tablists = document.getElementById("tablists");
 const addBtn = document.getElementById("addNewTab");
 const removeAllTabs = document.getElementById("removeAllbtn")
+
 
 
 function createTab(tab) {
@@ -24,8 +25,17 @@ function createTab(tab) {
   tabDetails.appendChild(tabImg);
   tabDetails.appendChild(tabName);
 
+  const deletBtn = document.createElement("button")
+  deletBtn.id = tab.id
+  deletBtn.className = "deleteBtn"
+  deletBtn.innerHTML = "❌"
+  
+  deletBtn.title = "Delete Tabs"
+  tabDetails.appendChild(deletBtn)
   tablists.appendChild(tabDetails);
-} 
+
+  deletBtn.addEventListener('click', deleteTab)
+}
 async function getTabs() {
   const db = await openDB();
   const tx = db.transaction("tabs", "readonly");
@@ -36,7 +46,7 @@ async function getTabs() {
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject("Error reading data");
   });
-} 
+}
 function getActiveTab() {
   return new Promise((resolve) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -48,19 +58,27 @@ function getActiveTab() {
       resolve(formatted);
     });
   });
-} 
+}
 addBtn.addEventListener("click", async () => {
   const addedTabs = await getActiveTab();
   await saveTabs(addedTabs);
   await displayTabs()
-}); 
+});
 const displayTabs = async () => {
   const res = await getTabs();
   tablists.innerHTML = "";
   res.forEach((tab) => createTab(tab));
 }
-displayTabs() 
+displayTabs()
+
 removeAllTabs.addEventListener('click', async () => {
   tablists.innerHTML = "";
   clearIndexedDB('MyTabs')
 })
+ 
+const deleteTab = (e) => {
+  e.preventDefault();
+  const id = e.target.id
+  deleteOneIndexDB(parseInt(id))
+  displayTabs()
+}
