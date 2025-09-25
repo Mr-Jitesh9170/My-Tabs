@@ -54,7 +54,18 @@ const deleteOneIndexDB = (id) => {
     };
 }
 
+async function getTabs() {
+    const db = await openDB();
+    const tx = db.transaction("tabs", "readonly");
+    const store = tx.objectStore("tabs");
+
+    return new Promise((resolve, reject) => {
+        const request = store.getAll();
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject("Error reading data");
+    });
+}
 
 export {
-    openDB, clearIndexedDB, saveTabs, deleteOneIndexDB
+    openDB, clearIndexedDB, saveTabs, deleteOneIndexDB, getTabs
 }

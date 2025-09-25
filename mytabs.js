@@ -1,9 +1,9 @@
-import { openDB, clearIndexedDB, saveTabs, deleteOneIndexDB } from "./dbs/db.js";
+import { saveTabs, deleteOneIndexDB, getTabs } from "./dbs/db.js";
 
 const tablists = document.getElementById("tablists");
 const addBtn = document.getElementById("addNewTab");
-const removeAllTabs = document.getElementById("removeAllbtn")
-
+const searchInput = document.getElementById("searchTab")
+const clearSearch = document.getElementById("clearSearch")
 
 
 function createTab(tab) {
@@ -29,24 +29,14 @@ function createTab(tab) {
   deletBtn.id = tab.id
   deletBtn.className = "deleteBtn"
   deletBtn.innerHTML = "❌"
-  
+
   deletBtn.title = "Delete Tabs"
   tabDetails.appendChild(deletBtn)
   tablists.appendChild(tabDetails);
 
   deletBtn.addEventListener('click', deleteTab)
 }
-async function getTabs() {
-  const db = await openDB();
-  const tx = db.transaction("tabs", "readonly");
-  const store = tx.objectStore("tabs");
 
-  return new Promise((resolve, reject) => {
-    const request = store.getAll();
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject("Error reading data");
-  });
-}
 function getActiveTab() {
   return new Promise((resolve) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -59,6 +49,7 @@ function getActiveTab() {
     });
   });
 }
+
 addBtn.addEventListener("click", async () => {
   const addedTabs = await getActiveTab();
   await saveTabs(addedTabs);
@@ -69,16 +60,31 @@ const displayTabs = async () => {
   tablists.innerHTML = "";
   res.forEach((tab) => createTab(tab));
 }
+
 displayTabs()
 
-removeAllTabs.addEventListener('click', async () => {
-  tablists.innerHTML = "";
-  clearIndexedDB('MyTabs')
-})
- 
 const deleteTab = (e) => {
   e.preventDefault();
   const id = e.target.id
   deleteOneIndexDB(parseInt(id))
   displayTabs()
 }
+
+
+const searchHanlder = async (e) => {
+  const { value } = e.target
+  if (!value.trim()) {
+    return
+  }
+  let tabsData = await getTabs()
+  let searchInputText = value.toLowerCase()
+  tabsData = tabsData.filter((tabs) => tabs.name.toLowerCase().includes(searchInputText) || tabs.links.toLowerCase().includes(searchInputText))
+  tablists.innerHTML = "";
+  tabsData.forEach((tab) => createTab(tab));
+}
+searchInput.addEventListener("input", searchHanlder)
+
+const clearSearchHandler = () => {
+  window.location.reload();
+}
+clearSearch.addEventListener("click", clearSearchHandler)

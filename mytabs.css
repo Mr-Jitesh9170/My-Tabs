@@ -34,6 +34,47 @@ body {
   min-width: 280px;
 }
 
+.searchBox {
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.2s ease;
+}
+.searchBox:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(29, 185, 84, 0.35);
+}
+
+#searchTab {
+  background-color: transparent;
+  color: #fff;
+  outline: none;
+  padding: 10px 12px;
+  flex: 1;
+  font-size: 14px;
+  border: none;
+}
+#searchTab::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+#clearSearch {
+  flex: 0;
+  padding: 0 12px;
+  background-color: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+#clearSearch:hover {
+  color: var(--danger);
+} 
 .topRow {
   display: flex;
   align-items: center;
@@ -85,7 +126,7 @@ h2 {
   border-radius: 8px;
   cursor: pointer;
   padding: 1.5px;
-}  
+}
 .textBtn {
   background: transparent;
   border: none;
